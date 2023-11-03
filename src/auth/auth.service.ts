@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { Account } from './dto/Account.interface';
@@ -15,6 +15,9 @@ export class AuthService {
 
   async signUp(userDetails: UserInterface): Promise<any> {
     const user = await this.usersService.findOneByUsername(userDetails.username);
+    if(!user) {
+      throw new NotFoundException();
+    }
     if(user) {
       throw new ConflictException();
     }
@@ -36,6 +39,9 @@ export class AuthService {
 
   async signIn(account: Account): Promise<any> {
     const user = await this.usersService.findOneByUsername(account.username);
+    if(!user) {
+      throw new NotFoundException();
+    }
     const passwordMatch = await bcrypt.compare(account.password, user?.password);
     if(!passwordMatch) {
       throw new UnauthorizedException();
