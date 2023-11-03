@@ -26,7 +26,7 @@ export class AuthService {
       avatar: ''
     };
 
-    const savedUser = await this.usersService.createNewUser(newUser);
+    const savedUser = await this.usersService.saveUser(newUser);
     const payload = { sub: savedUser.userId, username: savedUser.username };
     delete savedUser.password;
     return {
@@ -50,5 +50,14 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
       user: user
     };
+  }
+
+  async getUserFromToken(token: string): Promise<any> {
+    try {
+      const decoded = this.jwtService.verify(token);
+      return decoded;
+    } catch (err) {
+      throw new Error('Invalid token');
+    }
   }
 }

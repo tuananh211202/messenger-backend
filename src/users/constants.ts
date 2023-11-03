@@ -1,3 +1,3 @@
 
 
-export const userProvideName = 'PHOTO_REPOSITORY';
+export const userProvideName = 'USER_REPOSITORY';

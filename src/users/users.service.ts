@@ -26,7 +26,7 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  async createNewUser(user: UserFull){
+  async saveUser(user: UserFull){
     return this.userRepository.save(user);
   }
 }
