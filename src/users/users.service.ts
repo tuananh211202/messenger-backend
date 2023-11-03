@@ -16,6 +16,12 @@ export class UsersService {
     });
   }
 
+  async findOneByName(name: string): Promise<User | undefined>{
+    return this.userRepository.findOne({
+      where: { name }
+    });
+  }
+
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }

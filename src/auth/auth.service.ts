@@ -14,11 +14,9 @@ export class AuthService {
   ) {}
 
   async signUp(userDetails: UserInterface): Promise<any> {
-    const user = await this.usersService.findOneByUsername(userDetails.username);
-    if(!user) {
-      throw new NotFoundException();
-    }
-    if(user) {
+    const userByUserName = await this.usersService.findOneByUsername(userDetails.username);
+    const userByName = await this.usersService.findOneByName(userDetails.name);
+    if(userByUserName || userByName) {
       throw new ConflictException();
     }
     const hashedPassword = await bcrypt.hash(userDetails?.password, 10);
