@@ -6,8 +6,6 @@ import { UsersService } from 'src/users/users.service';
 import * as nodemailer from 'nodemailer';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { userProvideName } from 'src/users/constants';
-import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class ForgotpasswordService {
