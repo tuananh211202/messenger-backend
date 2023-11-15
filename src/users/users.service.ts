@@ -6,13 +6,15 @@ import { UserFull } from './dto/UserFull.interface';
 import * as nodemailer from "nodemailer";
 import * as bcrypt from "bcrypt";
 import { generateRandomPassword } from 'src/utils/generateCode';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
   private transporter: nodemailer.Transporter;
 
   constructor(
-    @Inject(userProvideName) private userRepository: Repository<User>
+    @Inject(userProvideName) private userRepository: Repository<User>,
+    private jwtService: JwtService
   ) {
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -35,8 +37,22 @@ export class UsersService {
     });
   }
 
-  async findAll(): Promise<User[]> { 
-    return this.userRepository.find();
+  async findByName(name: string) {
+    const user = await this.userRepository.findOne({
+      where: { name }
+    });
+    if(!user) {
+      throw new NotFoundException();
+    }
+
+    delete user.password;
+    return user;
+  }
+
+  async findAll(): Promise<User[]> {
+    return this.userRepository.createQueryBuilder('user')
+      .select(['user.userId', 'user.username', 'user.name', 'user.description', 'user.avatar'])
+      .getMany();
   }
 
   async saveUser(user: UserFull){
@@ -45,26 +61,17 @@ export class UsersService {
 
   async updateUser(currentUser, userDetails: UserFull){
     const user = await this.userRepository.findOne({
-      where: { name: currentUser.name }
+      where: { name: userDetails.name }
     });
     if(!user) {
       throw new NotFoundException();
-    }
-
-    if(userDetails.name) {
-      const existUser = await this.userRepository.findOne({
-        where: { name: userDetails.name }
-      });
-      if(existUser) {
-        throw new ConflictException();
-      }
     }
 
     if(userDetails.username) {
       const existUser = await this.userRepository.findOne({
         where: { username: userDetails.username }
       });
-      if(existUser) {
+      if(existUser?.name && existUser.name !== user.name) {
         throw new ConflictException();
       }
     }
@@ -74,8 +81,11 @@ export class UsersService {
       ...userDetails
     });
     delete savedUser.password;
-
-    return savedUser;
+    const payload = { sub: savedUser.userId, username: savedUser.username };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+      user: savedUser
+    };
   }
 
   async resetPassword(currentUser) {

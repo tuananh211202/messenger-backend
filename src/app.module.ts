@@ -6,9 +6,11 @@ import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
 import { ForgotpasswordModule } from './forgotpassword/forgotpassword.module';
 import { JwtMiddleware } from './auth/Jwt.middleware';
+import { ImageModule } from './image/image.module';
+import { FriendRequestModule } from './friend-request/friend-request.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, DatabaseModule, ForgotpasswordModule],
+  imports: [AuthModule, UsersModule, DatabaseModule, ForgotpasswordModule, ImageModule, FriendRequestModule],
   controllers: [AppController],
   providers: [AppService],
 })
