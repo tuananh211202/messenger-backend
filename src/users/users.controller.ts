@@ -20,6 +20,12 @@ export class UsersController {
     return this.usersService.findByName(name);
   }
 
+  @Public()
+  @Get('/contain/:name')
+  findContainByName(@Param('name') name: string) {
+    return this.usersService.findContainByName(name);
+  }
+
   @UseGuards(AuthGuard)
   @Post()
   updateProfile(@Request() req, @Body() userProfile: UserProfile) {

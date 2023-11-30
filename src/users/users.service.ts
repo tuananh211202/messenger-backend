@@ -1,6 +1,6 @@
 import { Injectable, Inject, NotFoundException, ConflictException, InternalServerErrorException } from '@nestjs/common';
 import { userProvideName } from './constants';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { UserFull } from './dto/UserFull.interface';
 import * as nodemailer from "nodemailer";
@@ -47,6 +47,15 @@ export class UsersService {
 
     delete user.password;
     return user;
+  } 
+
+  async findContainByName(name: string) {
+    return this.userRepository.find({
+      select: ['userId', 'name', 'username', 'description', 'avatar'],
+      where: {
+        name: Like(`%${name}%`),
+      }
+    });
   }
 
   async findAll(): Promise<User[]> {

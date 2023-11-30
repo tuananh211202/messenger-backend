@@ -9,18 +9,18 @@ export class FriendRequestController {
   @UseGuards(AuthGuard)
   @Post(':name')
   createFriendRequest(@Request() req, @Param('name') name: string) {
-    return this.friendRequestService.createFriendRequest(req.user.name, name);
+    return this.friendRequestService.createFriendRequest(req.user.username, name);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':name')
   deleteFriendRequest(@Request() req, @Param('name') name: string) {
-    return this.friendRequestService.deleteFriendRequest(req.user.name, name);
+    return this.friendRequestService.deleteFriendRequest(req.user.username, name);
   }
 
   @UseGuards(AuthGuard)
   @Get(':name')
   getRelation(@Request() req, @Param('name') name: string) {
-    return this.friendRequestService.getRelation(req.user.name, name);
+    return this.friendRequestService.getRelation(req.user.username, name);
   }
 }

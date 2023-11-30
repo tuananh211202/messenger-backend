@@ -12,7 +12,7 @@ export class FriendRequestService {
   ) {}
 
   async createFriendRequest(senderUserName: string, receiverUserName: string) {
-    const senderUser = await this.userService.findOneByName(senderUserName);
+    const senderUser = await this.userService.findOneByUsername(senderUserName);
     const receiverUser = await this.userService.findOneByName(receiverUserName);
     if(!senderUser || !receiverUser) {
       throw new NotFoundException();
@@ -25,7 +25,7 @@ export class FriendRequestService {
   }
 
   async deleteFriendRequest(senderUserName: string, receiverUserName: string) {
-    const senderUser = await this.userService.findOneByName(senderUserName);
+    const senderUser = await this.userService.findOneByUsername(senderUserName);
     const receiverUser = await this.userService.findOneByName(receiverUserName);
     if(!senderUser || !receiverUser) {
       throw new NotFoundException();
@@ -43,7 +43,7 @@ export class FriendRequestService {
   }
 
   async getRelation(senderUserName: string, receiverUserName: string) {
-    const senderUser = await this.userService.findOneByName(senderUserName);
+    const senderUser = await this.userService.findOneByUsername(senderUserName);
     const receiverUser = await this.userService.findOneByName(receiverUserName);
     if(!senderUser || !receiverUser) {
       throw new NotFoundException();
