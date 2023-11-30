@@ -3,6 +3,7 @@ export class UserProfile {
   email?: string;
   description?: string;
   password?: string;
+  avatar?: string;
 }
 
 export class UserAvatar {
